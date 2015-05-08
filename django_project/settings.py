@@ -32,9 +32,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+	'wpadmin',
     #'django_admin_bootstrapped',
     'material',
-    'material.admin',
+    #'material.admin',
     'autocomplete_light',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,6 +46,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'crispy_forms',
     'bootstrap3',
+    'django_states',
     'easymoney',
     'phonenumber_field',
     'django_countries',
@@ -61,6 +63,7 @@ INSTALLED_APPS = (
     'Tutor',
     'Client',
     'Subjects',
+    'Calendar',
 )
 
 MIDDLEWARE_CLASSES = (

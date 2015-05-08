@@ -1,5 +1,9 @@
 from django.contrib import admin
-from models import Tutor, TutorStudentRelationship, Session, TutorStudentSubjectRate
+from models import (
+	Tutor, 
+	TutorStudentRelationship, 
+	TutorStudentSubjectRate,
+	SessionPay)
 
 class TutorStudentSubjectRateInline(admin.TabularInline):
 	model = TutorStudentSubjectRate
@@ -11,4 +15,4 @@ class TutorStudentRelationshipAdmin(admin.ModelAdmin):
 admin.site.register(Tutor)
 admin.site.register(TutorStudentRelationship, TutorStudentRelationshipAdmin)
 admin.site.register(TutorStudentSubjectRate)
-admin.site.register(Session)
+admin.site.register(SessionPay)
