@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from allauth.account.models import Profile, Address
-from Calendar.models import Session, SESSION_STATE_DESCRIPTIONS
+from django.conf import settings
 
 from easymoney import MoneyField
 
@@ -39,14 +39,14 @@ class Invoice(models.Model):
 		return unicode(self.client) + ": " + unicode(self.month) + "/" + unicode(self.year)
 
 class SessionStateChargeModifiers(models.Model):
-	session_state = models.CharField(max_length=30, choices = SESSION_STATE_DESCRIPTIONS)
+	session_state = models.ForeignKey('Calendar.SessionState')
 	charge_percentage = models.IntegerField(default=0)
 
 	def __unicode__(self):
 		return unicode(self.session_state)
 
 class SessionBill(models.Model):
-	session = models.ForeignKey(Session)
+	session = models.ForeignKey('Calendar.Session')
 	invoice = models.ForeignKey(Invoice)
 	discount = models.IntegerField(default=0)
 	client_charge = MoneyField(default=0)

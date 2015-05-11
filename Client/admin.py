@@ -1,6 +1,10 @@
 from django.contrib import admin
 
-from models import Client, Invoice, SessionBill, SessionStateChargeModifiers
+from models import (
+	Client, 
+	Invoice, 
+	SessionBill, 
+	SessionStateChargeModifiers)
 
 class SessionBillInline(admin.TabularInline):
 	model = SessionBill

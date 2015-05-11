@@ -8,10 +8,9 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
-    # Examples:
+    url(r'^', include('favicon.urls')),
     url(r'^account/', include('allauth.urls')),
     url(r'^$', include('BrownstoneTutors.urls')),
-    # url(r'^blog/', include('blog.urls')),
     url(r'^autocomplete/', include('autocomplete_light.urls')),
     url(r'^account/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^invitations/', include('GroupInvitations.urls', namespace='GroupInvitations')),

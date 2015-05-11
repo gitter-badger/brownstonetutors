@@ -3,7 +3,8 @@ from models import (
 	Tutor, 
 	TutorStudentRelationship, 
 	TutorStudentSubjectRate,
-	SessionPay)
+	SessionPay,
+	SessionStatePayModifiers)
 
 class TutorStudentSubjectRateInline(admin.TabularInline):
 	model = TutorStudentSubjectRate
@@ -16,3 +17,4 @@ admin.site.register(Tutor)
 admin.site.register(TutorStudentRelationship, TutorStudentRelationshipAdmin)
 admin.site.register(TutorStudentSubjectRate)
 admin.site.register(SessionPay)
+admin.site.register(SessionStatePayModifiers)

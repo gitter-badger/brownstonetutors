@@ -32,7 +32,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-	'wpadmin',
+    'favicon',
+	'grappelli.dashboard',
+    'grappelli',
     #'django_admin_bootstrapped',
     'material',
     #'material.admin',
@@ -46,7 +48,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'crispy_forms',
     'bootstrap3',
-    'django_states',
+    'django_fsm',
     'easymoney',
     'phonenumber_field',
     'django_countries',
@@ -167,6 +169,8 @@ MEDIA_URL = '/media/'
 
 STATIC_ROOT = '/home/django/django_project/static/'
 
+#FAVICON_PATH = MEDIA_URL + 'favicon.ico'
+
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 #STATICFILES_DIRS = (
@@ -186,3 +190,13 @@ MUGSHOT_PATH = 'mugshots/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
+
+GRAPPELLI_ADMIN_TITLE = 'Brownstone Tutors Admin'
+
+SESSION_STATE_DESCRIPTIONS =(
+    ('scheduled' , 'Session scheduled'),
+    ('unconfirmed' , 'Session uncomfirmed'),
+    ('confirmed' , 'Session comfirmed'),
+    ('cancelled_late' , 'Session cancelled late'),
+    ('cancelled_last_minute' , 'Session cancelled last minute'),
+    ('no_show' , 'Student no show'))
