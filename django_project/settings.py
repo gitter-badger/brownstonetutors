@@ -33,9 +33,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = (
     'favicon',
-	'grappelli.dashboard',
-    'grappelli',
+    'wpadmin',
+	#'grappelli.dashboard',
     #'django_admin_bootstrapped',
+    #'grappelli',
     'material',
     #'material.admin',
     'autocomplete_light',
@@ -46,9 +47,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'jquery',
     'crispy_forms',
     'bootstrap3',
     'django_fsm',
+    'schedule',
     'easymoney',
     'phonenumber_field',
     'django_countries',
@@ -109,6 +112,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'allauth.account.context_processors.account',
     'allauth.socialaccount.context_processors.socialaccount',
+    'django.core.context_processors.i18n',
+    'django.contrib.messages.context_processors.messages',
 )
 
 #ORGS_REGISTRATION_BACKEND = 'myapp.backends.MyRegistrationBackend'
@@ -191,7 +196,20 @@ MUGSHOT_PATH = 'mugshots/'
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 
-GRAPPELLI_ADMIN_TITLE = 'Brownstone Tutors Admin'
+WPADMIN = {
+    'admin': {
+        'admin_site': 'django.contrib.admin.site',
+        'title': 'BT Admin Panel',
+        'menu': {
+            'top': 'wpadmin.menu.menus.BasicTopMenu',
+            'left': 'wpadmin.menu.menus.BasicLeftMenu',
+        },
+        'dashboard': {
+            'breadcrumbs': True,
+        },
+        'custom_style': STATIC_URL + 'wpadmin/css/themes/ectoplasm.css',
+    },
+}
 
 SESSION_STATE_DESCRIPTIONS =(
     ('scheduled' , 'Session scheduled'),

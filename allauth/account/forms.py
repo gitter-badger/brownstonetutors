@@ -291,6 +291,10 @@ class SignupForm(BaseSignupForm):
 
     password1 = SetPasswordField(label=_("Password"))
     password2 = PasswordField(label=_("Password (again)"))
+    first_name = forms.CharField(max_length=40,
+                                       required=True)
+    last_name = forms.CharField(max_length=40,
+                                       required=True)
     confirmation_key = forms.CharField(max_length=40,
                                        required=False,
                                        widget=forms.HiddenInput())
@@ -398,7 +402,6 @@ class AddEmailForm(UserForm):
                              required=True,
                              widget=forms.TextInput(attrs={"type": "email",
                                                            "size": "30"}))
-
     def clean_email(self):
         value = self.cleaned_data["email"]
         value = get_adapter().clean_email(value)
@@ -421,7 +424,6 @@ class AddEmailForm(UserForm):
                                               self.user,
                                               self.cleaned_data["email"],
                                               confirm=True)
-
 
 class ChangePasswordForm(UserForm):
 

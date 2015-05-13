@@ -29,8 +29,8 @@ class GroupInvitation(models.Model):
     accepted = models.BooleanField(verbose_name=_('accepted'), default=False)
     created = models.DateTimeField(verbose_name=_('created'),
                                    default=timezone.now)
-    key = models.CharField(verbose_name=_('key'), max_length=64, unique=True)
-    sent = models.DateTimeField(verbose_name=_('sent'), null=True)
+    key = models.CharField(verbose_name=_('key'), max_length=64, unique=True, default='0')
+    sent = models.DateTimeField(verbose_name=_('sent'), null=True, default=timezone.now)
 
     objects = InvitationManager()
 
