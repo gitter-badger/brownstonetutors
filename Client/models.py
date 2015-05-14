@@ -46,7 +46,7 @@ class SessionStateChargeModifiers(models.Model):
 		return unicode(self.session_state)
 
 class SessionBill(models.Model):
-	session = models.ForeignKey('Calendar.Session')
+	session = models.ForeignKey('Calendar.SessionEvent')
 	invoice = models.ForeignKey(Invoice)
 	discount = models.IntegerField(default=0)
 	client_charge = MoneyField(default=0)

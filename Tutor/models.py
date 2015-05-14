@@ -43,7 +43,7 @@ class SessionStatePayModifiers(models.Model):
 		return unicode(self.session_state)
 
 class SessionPay(models.Model):
-	session = models.ForeignKey('Calendar.Session')
+	session = models.ForeignKey('Calendar.SessionEvent')
 	tutor_pay = MoneyField(default=0)
 
 	def __unicode__(self):

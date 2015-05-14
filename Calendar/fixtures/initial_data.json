@@ -3,42 +3,42 @@
         "pk": "scheduled",
         "model": "Calendar.sessionstate",
         "fields": {
-            "label": "_SCHEDULED_"
+            "label": "scheduled"
         }
     },
     {
         "pk": "unconfirmed",
         "model": "Calendar.sessionstate",
         "fields": {
-            "label": "_UNCONFIRMED_"
+            "label": "unconfirmed"
         }
     },
     {
         "pk": "confirmed",
         "model": "Calendar.sessionstate",
         "fields": {
-            "label": "_CONFIRMED_"
+            "label": "confirmed"
         }
     },
     {
         "pk": "cancelled_late",
         "model": "Calendar.sessionstate",
         "fields": {
-            "label": "_CANCELLED_LATE_"
+            "label": "cancelled_late"
         }
     },
     {
         "pk": "cancelled_last_minute",
         "model": "Calendar.sessionstate",
         "fields": {
-            "label": "_CANCELLED_LAST_MINUTE_"
+            "label": "cancelled_last_minute"
         }
     },
     {
         "pk": "no_show",
         "model": "Calendar.sessionstate",
         "fields": {
-            "label": "_NO_SHOW_"
+            "label": "no_show"
         }
     }
 ]

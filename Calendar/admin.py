@@ -1,7 +1,7 @@
 from django.contrib import admin
 from models import (
-	Session,
+	SessionEvent,
 	SessionState)
 
-admin.site.register(Session)
+admin.site.register(SessionEvent)
 admin.site.register(SessionState)
