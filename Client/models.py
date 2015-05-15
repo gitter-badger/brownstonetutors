@@ -39,14 +39,14 @@ class Invoice(models.Model):
 		return unicode(self.client) + ": " + unicode(self.month) + "/" + unicode(self.year)
 
 class SessionStateChargeModifiers(models.Model):
-	session_state = models.ForeignKey('Calendar.SessionState')
+	session_state = models.ForeignKey('SessionSchedule.SessionState')
 	charge_percentage = models.IntegerField(default=0)
 
 	def __unicode__(self):
 		return unicode(self.session_state)
 
 class SessionBill(models.Model):
-	session = models.ForeignKey('Calendar.SessionEvent')
+	session = models.ForeignKey('SessionSchedule.SessionEvent')
 	invoice = models.ForeignKey(Invoice)
 	discount = models.IntegerField(default=0)
 	client_charge = MoneyField(default=0)

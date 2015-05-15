@@ -19,11 +19,12 @@ class InvoiceAdmin(admin.ModelAdmin):
 	inlines = (SessionBillInline,)
 
 class SessionStateChargeModifiersAdmin(admin.ModelAdmin):
-	readonly_fields = ('session_state',)
-	def has_add_permission(self, request, obj=None):
-		return False
-	def has_delete_permission(self, request, obj=None):
-		return False
+	pass
+	#readonly_fields = ('session_state',)
+	#def has_add_permission(self, request, obj=None):
+		#return False
+	#def has_delete_permission(self, request, obj=None):
+		#return False
 
 admin.site.register(Client)
 admin.site.register(SessionBill)

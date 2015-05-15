@@ -67,8 +67,7 @@ INSTALLED_APPS = (
     'Student',
     'Tutor',
     'Client',
-    'Subjects',
-    'Calendar',
+    'Subjects',    'SessionSchedule',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -207,7 +206,7 @@ WPADMIN = {
         'dashboard': {
             'breadcrumbs': True,
         },
-        'custom_style': STATIC_URL + 'wpadmin/css/themes/ectoplasm.css',
+        'custom_style': STATIC_URL + 'wpadmin/css/themes/midnight.css',
     },
 }
 

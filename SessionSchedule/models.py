@@ -17,7 +17,9 @@ class SessionState(models.Model):
     def __unicode__(self):
         return unicode(self.label)
 
-
+class SessionCalendar(Calendar):
+    pass
+    
 class SessionEvent(Event):
     tutor_student_rel_sub = models.ForeignKey('Tutor.TutorStudentSubjectRate')
     session_state = FSMKeyField(SessionState, default='scheduled')

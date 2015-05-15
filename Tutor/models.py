@@ -36,14 +36,14 @@ class TutorStudentSubjectRate(models.Model):
 		return unicode(self.tutor_student_rel) + " in " + unicode(self.subjects)
 
 class SessionStatePayModifiers(models.Model):
-	session_state = models.ForeignKey('Calendar.SessionState')
+	session_state = models.ForeignKey('SessionSchedule.SessionState')
 	pay_percentage = models.IntegerField(default=0)
 
 	def __unicode__(self):
 		return unicode(self.session_state)
 
 class SessionPay(models.Model):
-	session = models.ForeignKey('Calendar.SessionEvent')
+	session = models.ForeignKey('SessionSchedule.SessionEvent')
 	tutor_pay = MoneyField(default=0)
 
 	def __unicode__(self):
