@@ -10,6 +10,10 @@ class TutorStudentSubjectRateInline(admin.TabularInline):
 	model = TutorStudentSubjectRate
 	extra = 0
 
+	def __init__(self, *args, **kwargs):
+		super(TutorStudentSubjectRateInline, self).__init__(*args, **kwargs)
+		self.fields['subjects'].queryset = self.instance.tutor_student_rel.tutor.subjects_set.all()
+
 class TutorStudentRelationshipAdmin(admin.ModelAdmin):
 	inlines = (TutorStudentSubjectRateInline,)
 

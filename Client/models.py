@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 
 from allauth.account.models import Profile, Address
 from django.conf import settings
@@ -9,8 +8,9 @@ from easymoney import MoneyField
 class Client(models.Model):
 	profile = models.OneToOneField(Profile, 
 								unique=True, 
-								verbose_name=_('profile'), 
-								related_name='client_profile')
+								verbose_name= 'profile', 
+								related_name='client_profile'
+								)
 	outstanding_balance = MoneyField(default=0)
 
 	def __unicode__(self):

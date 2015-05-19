@@ -5,6 +5,9 @@ import pytz
 import datetime
 from urllib.parse import quote
 
+from django.http import HttpResponseForbidden
+from django.contrib.auth.decorators import login_required
+
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404
@@ -21,11 +24,19 @@ from schedule.forms import EventForm, OccurrenceForm
 from schedule.models import Calendar, Occurrence, Event
 from schedule.periods import weekday_names
 from schedule.utils import check_event_permissions, coerce_date_dict
-from schedule.views import get_next_url
+from utils import check_calendar_permissions
+from schedule import views as s_views
 
 from forms import SessionEventForm
 from models import SessionEvent
 
+@check_calendar_permissions
+def calendar(request, calendar_slug, template='schedule/calendar.html'):
+    return s_views.calendar(request, calendar_slug, template)
+
+@check_calendar_permissions
+def calendar_by_periods(request, calendar_slug, periods=None, template_name="schedule/calendar_by_period.html"):
+    return s_views.calendar_by_periods(request, calendar_slug, periods, template_name)
 
 def session(request, event_id, template_name="session.html"):
     """
@@ -40,6 +51,10 @@ def session(request, event_id, template_name="session.html"):
         this is the url that referred to this view.
     """
     session_event = get_object_or_404(SessionEvent, id=event_id)
+
+    if not isinstance(session_event, SessionEvent):
+        return s_views.event(request, event_id)
+
     return render(request, template_name, {
         "event": session_event,
         "back_url": None,
@@ -70,6 +85,7 @@ def create_or_edit_session(request, calendar_slug, event_id=None, next=None, tem
     # If the key word argument redirect is set
     # Lastly redirect to the event detail of the recently create event
     """
+
     date = coerce_date_dict(request.GET)
     initial_data = None
     if date:
@@ -86,11 +102,14 @@ def create_or_edit_session(request, calendar_slug, event_id=None, next=None, tem
 
     instance = None
     if event_id is not None:
-        instance = get_object_or_404(Event, id=event_id)
+        try:
+            instance = get_object_or_404(SessionEvent, id=event_id)
+        except Http404:
+            return s_views.create_or_edit_event(request, calendar_slug, event_id, next)
 
     calendar = get_object_or_404(Calendar, slug=calendar_slug)
 
-    form = form_class(data=request.POST or None, instance=instance, initial=initial_data)
+    form = form_class(data=request.POST or None, instance=instance, initial=initial_data, user=request.user)
 
     if form.is_valid():
         event = form.save(commit=False)
@@ -99,10 +118,10 @@ def create_or_edit_session(request, calendar_slug, event_id=None, next=None, tem
             event.calendar = calendar
         event.save()
         next = next or reverse('event', args=[event.id])
-        next = get_next_url(request, next)
+        next = s_views.get_next_url(request, next)
         return HttpResponseRedirect(next)
 
-    next = get_next_url(request, next)
+    next = s_views.get_next_url(request, next)
     return render_to_response(template_name, {
         "form": form,
         "calendar": calendar,

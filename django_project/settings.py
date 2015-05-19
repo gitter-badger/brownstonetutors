@@ -10,6 +10,9 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from django.core.urlresolvers import reverse_lazy
+from SessionSchedule.permissions import calendar_permissions, event_permissions
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SETTINGS_PATH = os.path.dirname(__file__)
 PROJECT_PATH = os.path.abspath(os.path.join(SETTINGS_PATH, os.pardir))
@@ -51,6 +54,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'bootstrap3',
     'django_fsm',
+    'SessionSchedule',
     'schedule',
     'easymoney',
     'phonenumber_field',
@@ -67,7 +71,7 @@ INSTALLED_APPS = (
     'Student',
     'Tutor',
     'Client',
-    'Subjects',    'SessionSchedule',
+    'Subjects',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -127,6 +131,7 @@ EMAIL_HOST_PASSWORD = '1234567890Josh'
 
 EMAIL_USE_SSL = True
 
+LOGIN_URL = reverse_lazy('account_login')
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_ADAPTER = 'GroupInvitations.models.InvitationsAdapter'
 
@@ -191,6 +196,9 @@ TEMPLATE_DIRS = (
 
 MEDIA_ROOT = '/home/django/django_project/media/'
 MUGSHOT_PATH = 'mugshots/'
+
+CHECK_CALENDAR_PERM_FUNC = calendar_permissions
+CHECK_EVENT_PERM_FUNC = event_permissions
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'

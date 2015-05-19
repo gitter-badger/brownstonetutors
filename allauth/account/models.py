@@ -11,6 +11,7 @@ from django.utils import timezone
 from django.contrib.sites.models import Site
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.crypto import get_random_string
+from django.template.defaultfilters import slugify
 
 from ..utils import build_absolute_uri
 from .. import app_settings as allauth_app_settings
@@ -31,8 +32,10 @@ from utils import get_gravatar, generate_sha1, get_protocol, get_datetime_now
 from django_countries import data as country_data
 country_list = [('', '-'*45)] + country_data.COUNTRIES.items()
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
+
+from schedule.models import Calendar
 
 def upload_to_mugshot(instance, filename):
     """
@@ -56,9 +59,17 @@ def create_user_profile(sender, instance, created, **kwargs):
         prof = prof.filter(last_name = instance.last_name)
         prof = prof.filter(user__isnull = True)
         if prof.count() == 0:
+            user_name = instance.first_name + ' ' + instance.last_name
+            calendar = Calendar.objects.filter(name=user_name)
+            if calendar.count() == 0:
+                calendar = Calendar.objects.create(name=user_name, 
+                            slug = slugify(user_name))
+            else:
+                calendar = calendar[0]
             Profile.objects.create(user=instance, 
                 first_name = instance.first_name,
-                last_name = instance.last_name)
+                last_name = instance.last_name,
+                calendar=calendar)
         else:
             prof.update(user = instance)
 
@@ -87,6 +98,8 @@ class Profile(models.Model):
                                     upload_to=upload_to_mugshot,
                                     resize_source=MUGSHOT_SETTINGS,
                                     help_text=_('A personal image displayed in your profile.'))
+
+    calendar = models.OneToOneField('schedule.Calendar')
 
     def get_mugshot_url(self):
     # First check for a mugshot and if any return that.

@@ -14,6 +14,7 @@ class Tutor(models.Model):
 								related_name='tutor_profile')
 	balance_owed = MoneyField(default=0)
 	students = models.ManyToManyField('Student.Student', through='TutorStudentRelationship')
+	qualifications = models.ManyToManyField('Subjects.Subject')
 
 	def __unicode__(self):
 		return unicode(self.profile)
