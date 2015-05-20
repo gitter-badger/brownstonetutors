@@ -30,14 +30,6 @@ from schedule import views as s_views
 from forms import SessionEventForm
 from models import SessionEvent
 
-@check_calendar_permissions
-def calendar(request, calendar_slug, template='schedule/calendar.html'):
-    return s_views.calendar(request, calendar_slug, template)
-
-@check_calendar_permissions
-def calendar_by_periods(request, calendar_slug, periods=None, template_name="schedule/calendar_by_period.html"):
-    return s_views.calendar_by_periods(request, calendar_slug, periods, template_name)
-
 def session(request, event_id, template_name="session.html"):
     """
     This view is for showing an event. It is important to remember that an

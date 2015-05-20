@@ -199,6 +199,7 @@ MUGSHOT_PATH = 'mugshots/'
 
 CHECK_CALENDAR_PERM_FUNC = calendar_permissions
 CHECK_EVENT_PERM_FUNC = event_permissions
+CALENDAR_VIEW_PERM = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'

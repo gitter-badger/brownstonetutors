@@ -1,9 +1,15 @@
-from builtins import str
-from builtins import object
+from __future__ import unicode_literals
+from six.moves.builtins import str
+from six.moves.builtins import object
+from six import with_metaclass
 from dateutil.rrule import DAILY, MONTHLY, WEEKLY, YEARLY, HOURLY, MINUTELY, SECONDLY
 
 from django.db import models
+from django.db.models.base import ModelBase
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
+
+from schedule.utils import get_model_bases
 
 freqs = (("YEARLY", _("Yearly")),
          ("MONTHLY", _("Monthly")),
@@ -14,7 +20,8 @@ freqs = (("YEARLY", _("Yearly")),
          ("SECONDLY", _("Secondly")))
 
 
-class Rule(models.Model):
+@python_2_unicode_compatible
+class Rule(with_metaclass(ModelBase, *get_model_bases())):
     """
     This defines a rule by which an event will recur.  This is defined by the
     rrule in the dateutil documentation.
@@ -84,6 +91,6 @@ class Rule(models.Model):
                 param_dict.append(param)
         return dict(param_dict)
 
-    def __unicode__(self):
+    def __str__(self):
         """Human readable string for Rule"""
         return 'Rule %s params %s' % (self.name, self.params)

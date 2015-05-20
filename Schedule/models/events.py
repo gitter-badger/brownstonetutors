@@ -1,5 +1,6 @@
-from __future__ import division
-from builtins import object
+from __future__ import division, unicode_literals
+from six.moves.builtins import object
+from six import with_metaclass
 # -*- coding: utf-8 -*-
 from django.conf import settings as django_settings
 import pytz
@@ -7,17 +8,20 @@ from dateutil import rrule
 
 from django.contrib.contenttypes import generic
 from django.db import models
+from django.db.models.base import ModelBase
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import date
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 
 from schedule.conf import settings
 from schedule.models.rules import Rule
 from schedule.models.calendars import Calendar
 from schedule.utils import OccurrenceReplacer
+from schedule.utils import get_model_bases
 
 
 class EventManager(models.Manager):
@@ -25,7 +29,8 @@ class EventManager(models.Manager):
         return EventRelation.objects.get_events_for_object(content_object, distinction, inherit)
 
 
-class Event(models.Model):
+@python_2_unicode_compatible
+class Event(with_metaclass(ModelBase, *get_model_bases())):
     '''
     This model stores meta data for a date.  You can relate this data to many
     other models.
@@ -50,12 +55,11 @@ class Event(models.Model):
         verbose_name_plural = _('events')
         app_label = 'schedule'
 
-    def __unicode__(self):
-        date_format = u'%s' % ugettext("DATE_FORMAT")
+    def __str__(self):
         return ugettext('%(title)s: %(start)s - %(end)s') % {
             'title': self.title,
-            'start': date(self.start, date_format),
-            'end': date(self.end, date_format),
+            'start': date(self.start, django_settings.DATE_FORMAT),
+            'end': date(self.end, django_settings.DATE_FORMAT),
         }
 
     def get_absolute_url(self):
@@ -80,9 +84,6 @@ class Event(models.Model):
         []
 `
         """
-        #if self.pk:
-            # performance booster for occurrences relationship
-            #Event.objects.select_related('occurrence').get(pk=self.pk)
         persisted_occurrences = self.occurrence_set.all()
         occ_replacer = OccurrenceReplacer(persisted_occurrences)
         occurrences = self._get_occurrence_list(start, end)
@@ -191,6 +192,7 @@ class Event(models.Model):
 
 class EventRelationManager(models.Manager):
     '''
+    >>> import datetime
     >>> EventRelation.objects.all().delete()
     >>> CalendarRelation.objects.all().delete()
     >>> data = {
@@ -309,7 +311,8 @@ class EventRelationManager(models.Manager):
         return er
 
 
-class EventRelation(models.Model):
+@python_2_unicode_compatible
+class EventRelation(with_metaclass(ModelBase, *get_model_bases())):
     '''
     This is for relating data to an Event, there is also a distinction, so that
     data can be related in different ways.  A good example would be, if you have
@@ -340,11 +343,12 @@ class EventRelation(models.Model):
         verbose_name_plural = _("event relations")
         app_label = 'schedule'
 
-    def __unicode__(self):
-        return u'%s(%s)-%s' % (self.event.title, self.distinction, self.content_object)
+    def __str__(self):
+        return '%s(%s)-%s' % (self.event.title, self.distinction, self.content_object)
 
 
-class Occurrence(models.Model):
+@python_2_unicode_compatible
+class Occurrence(with_metaclass(ModelBase, *get_model_bases())):
     event = models.ForeignKey(Event, verbose_name=_("event"))
     title = models.CharField(_("title"), max_length=255, blank=True, null=True)
     description = models.TextField(_("description"), blank=True, null=True)
@@ -428,10 +432,10 @@ class Occurrence(models.Model):
             'second': self.start.second,
         })
 
-    def __unicode__(self):
+    def __str__(self):
         return ugettext("%(start)s to %(end)s") % {
-            'start': self.start,
-            'end': self.end,
+            'start': date(self.start, django_settings.DATE_FORMAT),
+            'end': date(self.end, django_settings.DATE_FORMAT)
         }
 
     def __lt__(self, other):

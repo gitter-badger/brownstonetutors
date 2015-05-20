@@ -1,20 +1,21 @@
-from builtins import range
-from builtins import object
+from __future__ import unicode_literals
+from six.moves.builtins import range
+from six.moves.builtins import object
 import pytz
 import datetime
 import calendar as standardlib_calendar
 
 from django.conf import settings
+from django.utils.encoding import python_2_unicode_compatible
 from django.template.defaultfilters import date as date_filter
-from django.utils.translation import ugettext
 from django.utils.dates import WEEKDAYS, WEEKDAYS_ABBR
-from schedule.conf.settings import FIRST_DAY_OF_WEEK, SHOW_CANCELLED_OCCURRENCES
+from schedule.conf.settings import SHOW_CANCELLED_OCCURRENCES
 from schedule.models import Occurrence
 from django.utils import timezone
 
 weekday_names = []
 weekday_abbrs = []
-if FIRST_DAY_OF_WEEK == 1:
+if settings.FIRST_DAY_OF_WEEK == 1:
     # The calendar week starts on Monday
     for i in range(7):
         weekday_names.append(WEEKDAYS[i])
@@ -162,6 +163,7 @@ class Period(object):
         return self.utc_end.replace(tzinfo=None)
 
 
+@python_2_unicode_compatible
 class Year(Period):
     def __init__(self, events, date=None, parent_persisted_occurrences=None, tzinfo=pytz.utc):
         self.tzinfo = self._get_tzinfo(tzinfo)
@@ -175,7 +177,8 @@ class Year(Period):
 
     def next_year(self):
         return Year(self.events, self.end, tzinfo=self.tzinfo)
-    __next__ = next_year
+    next = __next__ = next_year
+    
 
     def prev_year(self):
         start = datetime.datetime(self.start.year - 1, self.start.month, self.start.day)
@@ -197,10 +200,11 @@ class Year(Period):
 
         return start, end
 
-    def __unicode__(self):
+    def __str__(self):
         return self.start.year
 
 
+@python_2_unicode_compatible
 class Month(Period):
     """
     The month period has functions for retrieving the week periods within this period
@@ -229,7 +233,7 @@ class Month(Period):
 
     def next_month(self):
         return Month(self.events, self.end, tzinfo=self.tzinfo)
-    __next__ = next_month
+    next = __next__ = next_month
 
     def prev_month(self):
         start = (self.start - datetime.timedelta(days=1)).replace(day=1, tzinfo=self.tzinfo)
@@ -267,7 +271,7 @@ class Month(Period):
 
         return start, end
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name()
 
     def name(self):
@@ -277,6 +281,7 @@ class Month(Period):
         return self.start.year
 
 
+@python_2_unicode_compatible
 class Week(Period):
     """
     The Week period that has functions for retrieving Day periods within it
@@ -296,7 +301,7 @@ class Week(Period):
 
     def next_week(self):
         return Week(self.events, self.end, tzinfo=self.tzinfo)
-    __next__ = next_week
+    next = __next__ = next_week
 
     def current_month(self):
         return Month(self.events, self.start, tzinfo=self.tzinfo)
@@ -313,7 +318,7 @@ class Week(Period):
         # Adjust the start datetime to midnight of the week datetime
         naive_start = datetime.datetime.combine(week, datetime.time.min)
         # Adjust the start datetime to Monday or Sunday of the current week
-        if FIRST_DAY_OF_WEEK == 1:
+        if settings.FIRST_DAY_OF_WEEK == 1:
             # The week begins on Monday
             sub_days = naive_start.isoweekday() - 1
         else:
@@ -336,14 +341,15 @@ class Week(Period):
 
         return start, end
 
-    def __unicode__(self):
-        date_format = u'l, %s' % ugettext("DATE_FORMAT")
+    def __str__(self):
+        date_format = 'l, %s' % settings.DATE_FORMAT
         return ugettext('Week: %(start)s-%(end)s') % {
             'start': date_filter(self.start, date_format),
             'end': date_filter(self.end, date_format),
         }
 
 
+@python_2_unicode_compatible
 class Day(Period):
     def __init__(self, events, date=None, parent_persisted_occurrences=None,
                  occurrence_pool=None, tzinfo=pytz.utc):
@@ -371,8 +377,8 @@ class Day(Period):
 
         return start, end
 
-    def __unicode__(self):
-        date_format = u'l, %s' % ugettext("DATE_FORMAT")
+    def __str__(self):
+        date_format = 'l, %s' % settings.DATE_FORMAT
         return ugettext('Day: %(start)s-%(end)s') % {
             'start': date_filter(self.start, date_format),
             'end': date_filter(self.end, date_format),
@@ -384,7 +390,7 @@ class Day(Period):
 
     def next_day(self):
         return Day(self.events, self.end, tzinfo=self.tzinfo)
-    __next__ = next_day
+    next = __next__ = next_day
 
     def current_year(self):
         return Year(self.events, self.start, tzinfo=self.tzinfo)

@@ -1,20 +1,6 @@
-from builtins import str
-from django.utils.translation import ugettext_lazy
+from six.moves.builtins import str
 from django.core.exceptions import ImproperlyConfigured
 from annoying.functions import get_config
-
-fdow_default = 0  # Sunday
-
-# Look for FIRST_DAY_OF_WEEK as a locale setting
-fdow = ugettext_lazy('FIRST_DAY_OF_WEEK')
-try:
-    FIRST_DAY_OF_WEEK = int(str(fdow))
-except ValueError:
-    # Let's try our settings
-    fdow = get_config('FIRST_DAY_OF_WEEK', fdow_default)
-    FIRST_DAY_OF_WEEK = int(fdow)
-except ValueError:
-    raise ImproperlyConfigured("FIRST_DAY_OF_WEEK must be an integer between 0 and 6")
 
 AUTH_USER_MODEL = get_config('AUTH_USER_MODEL')
 # whether to display cancelled occurrences
@@ -44,6 +30,8 @@ if not CHECK_CALENDAR_PERM_FUNC:
         return user.is_authenticated()
 
     CHECK_CALENDAR_PERM_FUNC = check_calendar_permission
+
+CALENDAR_VIEW_PERM = get_config('CALENDAR_VIEW_PERM', False)
 
 # Callable used to customize the event list given for a calendar and user
 # (e.g. all events on that calendar, those events plus another calendar's events,

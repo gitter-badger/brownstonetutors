@@ -20,9 +20,9 @@ from schedule.conf.settings import GET_EVENTS_FUNC, OCCURRENCE_CANCEL_REDIRECT
 from schedule.forms import EventForm, OccurrenceForm
 from schedule.models import Calendar, Occurrence, Event
 from schedule.periods import weekday_names
-from schedule.utils import check_event_permissions, coerce_date_dict
+from schedule.utils import check_event_permissions, check_calendar_permissions, coerce_date_dict
 
-
+@check_calendar_permissions
 def calendar(request, calendar_slug, template='schedule/calendar.html'):
     """
     This view returns a calendar.  This view should be used if you are
@@ -40,7 +40,7 @@ def calendar(request, calendar_slug, template='schedule/calendar.html'):
         "calendar": calendar,
     }, context_instance=RequestContext(request))
 
-
+@check_calendar_permissions
 def calendar_by_periods(request, calendar_slug, periods=None, template_name="schedule/calendar_by_period.html"):
     """
     This view is for getting a calendar, but also getting periods with that
@@ -88,8 +88,11 @@ def calendar_by_periods(request, calendar_slug, periods=None, template_name="sch
     else:
         date = timezone.now()
     event_list = GET_EVENTS_FUNC(request, calendar)
-    local_timezone = request.session.setdefault('django_timezone', 'UTC')
-    local_timezone = pytz.timezone(local_timezone)
+
+    if 'django_timezone' in request.session:
+        local_timezone = pytz.timezone(request.session['django_timezone'])
+    else:
+        local_timezone = timezone.get_default_timezone()
     period_objects = {} 
     for period in periods:
         if period.__name__.lower() == 'year':
